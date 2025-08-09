@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Initialize Email Configs</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 40px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    #status {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Initialize Firestore Email Config Collection</h2>
+  <button onclick="initializeCollection()">Create Collection</button>
+  <p id="status"></p>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+      storageBucket: "josrenithdata.firebasestorage.app",
+      messagingSenderId: "927727164934",
+      appId: "1:927727164934:web:571201ca8783b143c76d87",
+      measurementId: "G-TV2887MC0T"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const denominations = [
+      "PENSA",
+      "APOSA",
+      "NUPS-G",
+      "CASA",
+      "FIRST LOVE",
+      "AGCM",
+      "GHAMSU",
+      "PAS-ROMANA",
+      "NCF",
+      "SPIRIT-LIFE",
+      "EVERGREEN",
+      "KMI",
+      "GNASS"
+    ];
+
+    async function initializeCollection() {
+      const status = document.getElementById('status');
+      try {
+        for (const denom of denominations) {
+          await db.collection('emailConfigs').doc(denom).set({ emails: [] });
+        }
+        status.textContent = "✅ emailConfigs collection initialized with your denominations.";
+      } catch (error) {
+        console.error("Error:", error);
+        status.textContent = "❌ Error initializing collection. Check console.";
+      }
+    }
+  </script>
+</body>
+</html>

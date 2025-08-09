@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Delete Group Entries - JosRenith</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    main {
+      padding: 100px 20px 30px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    td:nth-child(2), th:nth-child(2) {
+      width: 250px;
+      max-width: 250px;
+      word-wrap: break-word;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background-color: #222;
+      color: #fff;
+    }
+    tr:nth-child(even) {
+      background-color: #f4f4f4;
+    }
+    .actions {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .btn {
+      background-color: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .delete-btn {
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+   <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+  <header> 
+    <nav class="navbar">
+      <div class="logo">JosRenith</div>
+      <ul class="nav-links">
+        <li><input type="text" id="searchInput" placeholder="Search all fields..." /></li>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="admin-signin.html">Admin</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Delete Group Entries</h1>
+    <div class="actions">
+      <button class="btn" onclick="exportToExcel()">Save as Spreadsheet</button>
+      <button class="btn" onclick="deleteSelected()">Delete Selected</button>
+    </div>
+    <div class="table-container">
+      <table id="entriesTable">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="selectAll"></th>
+            <th>Full Name</th>
+            <th>Mobile Number</th>
+            <th>Email</th>
+            <th>Fellowship Home</th>
+            <th>Student Type</th>
+            <th>Hostel</th>
+            <th>Date of Birth</th>
+            <th>Year Batch</th>
+            <th>Hometown</th>
+            <th>Comment</th>
+            <th>Group</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="entriesBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      deleteDoc,
+      doc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+      storageBucket: "josrenithdata.appspot.com",
+      messagingSenderId: "927727164934",
+      appId: "1:927727164934:web:571201ca8783b143c76d87"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const tableBody = document.getElementById("entriesBody");
+    const groups = [
+      "PENSA", "APOSA", "NUPS-G", "GHAMSU", "SHALOM", "CE", "NCCF", "CASA", "CHAD", "WIUC-C", 
+      "SCRIPTURE UNION", "NASFAT", "DORMAN"
+    ];
+
+    async function fetchAllGroups() {
+      for (const group of groups) {
+        const snapshot = await getDocs(collection(db, group));
+        snapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          const id = docSnap.id;
+
+          const row = document.createElement("tr");
+          row.dataset.docId = id;
+          row.dataset.group = group;
+
+          row.innerHTML = `
+            <td><input type="checkbox" class="row-checkbox" /></td>
+            <td>${data.fullName || ""}</td>
+            <td>'${data.mobileNumber || ""}</td>
+            <td>${data.email || ""}</td>
+            <td>${data.fellowshipHome || ""}</td>
+            <td>${data.studentType || ""}</td>
+            <td>${data.hostel || ""}</td>
+            <td>'${data.dob || ""}</td>
+            <td>${data.year || ""}</td>
+            <td>${data.hometown || ""}</td>
+            <td>${data.comment || ""}</td>
+            <td>${group}</td>
+            <td><button class="delete-btn" onclick="deleteEntry(this)">Delete</button></td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+    }
+
+    fetchAllGroups();
+
+    window.deleteEntry = async function(button) {
+      const row = button.closest("tr");
+      const docId = row.dataset.docId;
+      const group = row.dataset.group;
+
+      if (confirm("Delete this entry?")) {
+        await deleteDoc(doc(db, group, docId));
+        row.remove();
+      }
+    };
+
+    window.deleteSelected = async function() {
+      const selected = document.querySelectorAll(".row-checkbox:checked");
+      if (selected.length === 0) return alert("Select entries to delete.");
+
+      if (!confirm(`Delete ${selected.length} selected entries?`)) return;
+
+      for (let checkbox of selected) {
+        const row = checkbox.closest("tr");
+        const docId = row.dataset.docId;
+        const group = row.dataset.group;
+        await deleteDoc(doc(db, group, docId));
+        row.remove();
+      }
+    };
+
+    document.getElementById("selectAll").addEventListener("change", function () {
+      const all = document.querySelectorAll(".row-checkbox");
+      all.forEach(cb => cb.checked = this.checked);
+    });
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const search = this.value.toLowerCase();
+      const rows = tableBody.querySelectorAll("tr");
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(search) ? "" : "none";
+      });
+    });
+
+    window.exportToExcel = function () {
+      const visibleRows = Array.from(document.querySelectorAll("#entriesTable tbody tr"))
+        .filter(row => row.style.display !== "none")
+        .map(row => {
+          const cells = row.querySelectorAll("td:not(:first-child):not(:last-child)");
+          return Array.from(cells).map(cell => cell.textContent);
+        });
+
+      const header = Array.from(document.querySelectorAll("#entriesTable thead th"))
+        .slice(1, -1)
+        .map(th => th.textContent);
+        
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet([header, ...visibleRows]);
+      XLSX.utils.book_append_sheet(wb, ws, "To_Delete");
+      XLSX.writeFile(wb, `Delete_Entries.xlsx`);
+    }
+  </script>
+</body>
+</html>

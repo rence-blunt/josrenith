@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Email Configurations</title>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #222;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    nav a {
+      color: #fff;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .container {
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .group-block {
+      background: #fff;
+      padding: 1rem 1.5rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+    }
+
+    .group-block h2 {
+      margin-bottom: 0.8rem;
+      color: #222;
+    }
+
+    .email-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .email-list li {
+      background: #f0f0f0;
+      padding: 0.5rem 1rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 5px;
+    }
+
+    .email-list button {
+      background: #d9534f;
+      color: white;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .add-email {
+      display: flex;
+      gap: 10px;
+      margin-top: 0.6rem;
+    }
+
+    .add-email input {
+      flex: 1;
+      padding: 0.4rem 0.6rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .add-email button {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 0.5rem 0.8rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+ <link rel="icon" type="image/png" href="favicon.png">
+<body>
+  <header>
+    <div class="logo">JosRenith Admin</div>
+    <nav>
+      <a href="admin-signin.html">Back to Admin</a>
+    </nav>
+  </header>
+
+  <div class="container" id="groupContainer">
+    <!-- Groups will load here -->
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+      storageBucket: "josrenithdata.appspot.com",
+      messagingSenderId: "927727164934",
+      appId: "1:927727164934:web:571201ca8783b143c76d87",
+      measurementId: "G-TV2887MC0T"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const denominations = [
+      "AGCM", "APOSA", "CASA", "EVERGREEN", "FIRST LOVE", "GHAMSU", "GNASS",
+      "KMI", "NCF", "NUPS-G", "PAS-ROMANA", "PENSA", "SPIRIT-LIFE"
+    ];
+
+    const groupContainer = document.getElementById("groupContainer");
+
+    async function renderGroups() {
+      groupContainer.innerHTML = "";
+
+      for (const name of denominations) {
+        const docRef = doc(db, "emailConfigs", name);
+        const snap = await getDoc(docRef);
+        const data = snap.exists() ? snap.data() : { emails: [] };
+        const emails = data.emails || [];
+
+        const block = document.createElement("div");
+        block.className = "group-block";
+
+        block.innerHTML = `
+          <h2>${name}</h2>
+          <ul class="email-list" id="list-${name}">
+            ${emails.map(email => `
+              <li>
+                ${email}
+                <button onclick="removeEmail('${name}', '${email}')">Delete</button>
+              </li>
+            `).join("")}
+          </ul>
+          <div class="add-email">
+            <input type="email" placeholder="Add new Gmail..." id="input-${name}" />
+            <button onclick="addEmail('${name}')">Add</button>
+          </div>
+        `;
+
+        groupContainer.appendChild(block);
+      }
+    }
+
+    window.addEmail = async function(name) {
+      const input = document.getElementById(`input-${name}`);
+      const email = input.value.trim();
+      if (!email) return alert("Enter a valid email");
+
+      const ref = doc(db, "emailConfigs", name);
+      await updateDoc(ref, {
+        emails: arrayUnion(email)
+      });
+      input.value = "";
+      await renderGroups();
+    };
+
+    window.removeEmail = async function(name, email) {
+      const ref = doc(db, "emailConfigs", name);
+      await updateDoc(ref, {
+        emails: arrayRemove(email)
+      });
+      await renderGroups();
+    };
+
+    renderGroups();
+  </script>
+</body>
+</html>

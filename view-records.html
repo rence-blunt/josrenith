@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>View Notes - Records</title>
+  <meta charset="UTF-8">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('my-bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 12px 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 16px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    .search-box input {
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    h2 {
+      margin-top: 90px;
+      margin-left: 20px;
+      color: white;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    #records {
+      padding: 20px;
+    }
+
+    .note {
+      background: white;
+      padding: 16px;
+      margin-bottom: 16px;
+      border-left: 5px solid #4CAF50;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .note h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      text-align: left;
+    }
+
+    .note .meta {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    .note p {
+      margin: 0 0 12px;
+      white-space: pre-line;
+      text-align: left;
+    }
+
+    .buttons {
+      display: flex;
+    }
+
+    .read-btn {
+      background: #2196F3;
+      color: white;
+      padding: 6px 14px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  </style>
+   <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+  <header>
+    <div class="logo">JosRenith</div>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="admin-signin.html">Back to Admin</a></li>
+      </ul>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search...">
+      </div>
+    </div>
+  </header>
+
+  <h2>📘 Saved Records</h2>
+  <div id="records"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let allRecords = [];
+
+    function renderRecords(records) {
+      const container = document.getElementById("records");
+      container.innerHTML = "";
+      records.forEach(data => {
+        const div = document.createElement("div");
+        div.className = "note";
+        const firstLine = data.content.split('\n')[0] || data.content;
+        div.innerHTML = `
+          <h3>${data.title}</h3>
+          <div class="meta">By ${data.author} (${new Date(data.createdAt.seconds * 1000).toLocaleString()})</div>
+          <p>${firstLine}...</p>
+          <div class="buttons">
+            <button class="read-btn">Read</button>
+          </div>
+        `;
+        div.querySelector(".read-btn").onclick = () => {
+          alert(`Title: ${data.title}\n\n${data.content}\n\nBy ${data.author} (${new Date(data.createdAt.seconds * 1000).toLocaleString()})`);
+        };
+        container.appendChild(div);
+      });
+    }
+
+    db.collection("records")
+      .orderBy("createdAt", "desc")
+      .get()
+      .then(snapshot => {
+        allRecords = snapshot.docs.map(doc => doc.data());
+        renderRecords(allRecords);
+      });
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      const term = e.target.value.toLowerCase();
+      const filtered = allRecords.filter(rec =>
+        rec.title.toLowerCase().includes(term) ||
+        rec.author.toLowerCase().includes(term) ||
+        rec.content.toLowerCase().includes(term) ||
+        new Date(rec.createdAt.seconds * 1000).toLocaleString().toLowerCase().includes(term)
+      );
+      renderRecords(filtered);
+    });
+  </script>
+</body>
+</html>

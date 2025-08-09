@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Group Form - JosRenith</title>
+  <link rel="stylesheet" href="style.css"/>
+   <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    .info-icon {
+      display: inline-block;
+      background-color: #007BFF;
+      color: white;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      text-align: center;
+      line-height: 18px;
+      cursor: pointer;
+      margin-left: 6px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+    .info-text {
+      display: none;
+      background-color: #f0f8ff;
+      border: 1px solid #007BFF;
+      padding: 8px;
+      margin-top: 4px;
+      border-radius: 4px;
+      font-size: 13px;
+      max-width: 300px;
+    }
+    #accessContainer {
+      text-align: center;
+      max-width: 400px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #accessContainer input {
+      padding: 10px;
+      width: 80%;
+      margin-bottom: 10px;
+    }
+    #accessContainer button {
+      padding: 10px 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #accessContainer button:hover {
+      background-color: #005bb5;
+    }
+    #accessMessage {
+      color: red;
+      margin-top: 10px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">JosRenith</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About / Team</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- 🔐 ACCESS CODE SCREEN -->
+  <div id="accessContainer">
+    <h2>Enter Access Code</h2>
+    <input type="text" id="accessCodeInput" placeholder="Enter 6-character code" maxlength="6" />
+    <button onclick="verifyAccessCode()">Submit</button>
+    <div id="accessMessage"></div>
+  </div>
+
+  <!-- ✅ FORM START -->
+  <main class="form-container hidden" id="formSection">
+    <h2 id="form-title">Group Registration</h2>
+    <form id="groupForm">
+      <label for="fullName">Full Name:</label>
+      <input type="text" id="fullName" name="fullName" required />
+
+      <label for="mobileNumber">Mobile Number:</label>
+      <input type="tel" id="mobileNumber" name="mobileNumber" required />
+
+      <label for="email">Gmail Address:</label>
+      <input type="email" id="email" name="email" required />
+
+      <label>Did you used to fellowship in this congregation at home?</label>
+      <div>
+        <input type="radio" id="fellowshipYes" name="fellowshipHome" value="Yes" required />
+        <label for="fellowshipYes">Yes</label>
+
+        <input type="radio" id="fellowshipNo" name="fellowshipHome" value="No" />
+        <label for="fellowshipNo">No</label>
+      </div>
+
+      <label>Are you a Day Student or Hosteler?</label>
+      <div>
+        <input type="radio" id="dayStudent" name="studentType" value="Day Student" required />
+        <label for="dayStudent">Day Student</label>
+
+        <input type="radio" id="hosteler" name="studentType" value="Hosteler" />
+        <label for="hosteler">Hosteler</label>
+      </div>
+
+      <div id="hostelContainer" style="display:none;">
+        <label for="hostel">Your Hostel:</label>
+        <select id="hostel" name="hostel">
+          <option value="">Select Hostel</option>
+          <option value="Assan Laryea">Assan Laryea</option>
+          <option value="Amoah">Amoah</option>
+          <option value="Tamakloe">Tamakloe</option>
+          <option value="Nightingale">Nightingale</option>
+        </select>
+      </div>
+
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" name="dob" required />
+
+      <label for="year">Year Batch (e.g., D26):</label>
+      <select id="year" name="year" required>
+        <option value="">Select Year Batch</option>
+        <option value="D26">D26</option>
+        <option value="D27">D27</option>
+        <option value="D28">D28</option>
+        <option value="D29">D29</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" id="customYear" name="customYear" placeholder="Please specify your year batch" style="display:none; margin-top:5px;" />
+
+      <label for="hometown">Hometown:
+        <span class="info-icon" data-info="hometownInfo">?</span>
+      </label>
+      <input type="text" id="hometown" name="hometown" />
+      <div id="hometownInfo" class="info-text">
+        We ask for your hometown to help us understand the diversity of our group and for demographic purposes only.
+      </div>
+
+      <label for="comment">Any Comment:
+        <span class="info-icon" data-info="commentInfo">?</span>
+      </label>
+      <textarea id="comment" name="comment" rows="4"></textarea>
+      <div id="commentInfo" class="info-text">
+        You can leave any comments, suggestions or questions here. This field is optional.
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+    <p id="form-message"></p>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore, collection, query, where, getDocs, addDoc, updateDoc, doc, getDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+      storageBucket: "josrenithdata.appspot.com",
+      messagingSenderId: "927727164934",
+      appId: "1:927727164934:web:571201ca8783b143c76d87"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const group = urlParams.get('group');
+    const formTitle = document.getElementById('form-title');
+    if (group) formTitle.textContent = `${group} FORM REGISTRATION`;
+
+    const form = document.getElementById('groupForm');
+    const hostelContainer = document.getElementById('hostelContainer');
+    const yearSelect = document.getElementById('year');
+    const customYearInput = document.getElementById('customYear');
+    const formMessage = document.getElementById('form-message');
+
+    form.studentType.forEach(radio => {
+      radio.addEventListener('change', () => {
+        hostelContainer.style.display = radio.value === 'Hosteler' && radio.checked ? 'block' : 'none';
+      });
+    });
+
+    yearSelect.addEventListener('change', () => {
+      customYearInput.style.display = yearSelect.value === "Other" ? 'block' : 'none';
+    });
+
+    document.querySelectorAll(".info-icon").forEach(icon => {
+      icon.addEventListener("click", () => {
+        const info = document.getElementById(icon.dataset.info);
+        info.style.display = info.style.display === "block" ? "none" : "block";
+      });
+    });
+
+    // 🔐 Access Code Verification
+    window.verifyAccessCode = async function () {
+      const code = document.getElementById("accessCodeInput").value.trim();
+      const message = document.getElementById("accessMessage");
+
+      if (!group) {
+        message.textContent = "❌ Group not found in URL.";
+        return;
+      }
+
+      try {
+        const docRef = doc(db, "denominationCodes", group);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const savedCode = docSnap.data().code;
+          if (code === savedCode) {
+            document.getElementById("accessContainer").classList.add("hidden");
+            document.getElementById("formSection").classList.remove("hidden");
+          } else {
+            message.textContent = "❌ Invalid access code!";
+          }
+        } else {
+          message.textContent = "❌ No code found for this group.";
+        }
+      } catch (err) {
+        console.error("Verification error:", err);
+        message.textContent = "❌ Error checking code.";
+      }
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!group) {
+        formMessage.textContent = "❌ Group name not found in URL.";
+        return;
+      }
+
+      const formData = {
+        fullName: form.fullName.value,
+        mobileNumber: form.mobileNumber.value,
+        email: form.email.value,
+        fellowshipHome: form.fellowshipHome.value,
+        studentType: form.studentType.value,
+        hostel: form.hostel?.value || "",
+        dob: form.dob.value,
+        year: yearSelect.value === "Other" ? customYearInput.value : yearSelect.value,
+        hometown: form.hometown.value,
+        comment: form.comment.value,
+        submittedAt: new Date().toISOString()
+      };
+
+      try {
+        const q = query(
+          collection(db, group),
+          where("fullName", "==", formData.fullName),
+          where("email", "==", formData.email)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const existingDoc = querySnapshot.docs[0];
+          await updateDoc(doc(db, group, existingDoc.id), formData);
+          formMessage.textContent = "✅ Information updated successfully!";
+        } else {
+          await addDoc(collection(db, group), formData);
+          formMessage.textContent = "✅ Form submitted successfully!";
+        }
+
+        form.reset();
+        hostelContainer.style.display = 'none';
+        customYearInput.style.display = 'none';
+      } catch (err) {
+        console.error(err);
+        formMessage.textContent = "❌ Failed to submit. Please try again.";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All Group Entries - JosRenith</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    main {
+      padding: 100px 20px 30px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    td:nth-child(1), th:nth-child(1) {
+      width: 250px;
+      max-width: 250px;
+      word-wrap: break-word;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background-color: #222;
+      color: #fff;
+    }
+    tr:nth-child(even) {
+      background-color: #f4f4f4;
+    }
+    .actions {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .download-btn {
+      background-color: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .download-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+   <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+  <header> 
+    <nav class="navbar">
+      <div class="logo">JosRenith</div>
+      <ul class="nav-links">
+        <li><input type="text" id="searchInput" placeholder="Search all fields..." /></li>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="admin-signin.html">Admin</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>All Group Entries</h1>
+    <div class="actions">
+      <button class="download-btn" onclick="exportToExcel()">Save as Spreadsheet</button>
+    </div>
+    <div class="table-container">
+      <table id="entriesTable">
+        <thead>
+          <tr>
+            <th>Full Name</th>
+            <th>Mobile Number</th>
+            <th>Email</th>
+            <th>Fellowship Home</th>
+            <th>Student Type</th>
+            <th>Hostel</th>
+            <th>Date of Birth</th>
+            <th>Year Batch</th>
+            <th>Hometown</th>
+            <th>Comment</th>
+            <th>Group</th>
+          </tr>
+        </thead>
+        <tbody id="entriesBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      enableIndexedDbPersistence
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+      storageBucket: "josrenithdata.appspot.com",
+      messagingSenderId: "927727164934",
+      appId: "1:927727164934:web:571201ca8783b143c76d87"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    enableIndexedDbPersistence(db).catch((err) => {
+      console.error("Persistence error:", err.code);
+    });
+
+    const tableBody = document.getElementById("entriesBody");
+    const groups = [
+      "PENSA", "APOSA", "NUPS-G", "GHAMSU", "SHALOM", "CE", "NCCF", "CASA", "CHAD", "WIUC-C", 
+      "SCRIPTURE UNION", "NASFAT", "DORMAN"
+    ];
+
+    async function fetchAllGroups() {
+      for (const group of groups) {
+        const snapshot = await getDocs(collection(db, group));
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${data.fullName || ""}</td>
+            <td>'${data.mobileNumber || ""}</td>
+            <td>${data.email || ""}</td>
+            <td>${data.fellowshipHome || ""}</td>
+            <td>${data.studentType || ""}</td>
+            <td>${data.hostel || ""}</td>
+            <td>'${data.dob || ""}</td>
+            <td>${data.year || ""}</td>
+            <td>${data.hometown || ""}</td>
+            <td>${data.comment || ""}</td>
+            <td>${group}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      }
+    }
+
+    fetchAllGroups();
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const search = this.value.toLowerCase();
+      const rows = tableBody.querySelectorAll("tr");
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(search) ? "" : "none";
+      });
+    });
+
+    window.exportToExcel = function () {
+      const rows = Array.from(document.querySelectorAll("#entriesTable tbody tr"))
+        .filter(row => row.style.display !== "none")
+        .map(row => {
+          const cells = row.querySelectorAll("td");
+          return Array.from(cells).map(cell => cell.textContent);
+        });
+
+      const header = Array.from(document.querySelectorAll("#entriesTable thead th")).map(th => th.textContent);
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+
+      XLSX.utils.book_append_sheet(wb, ws, "All Groups");
+      XLSX.writeFile(wb, `All_Groups_Entries.xlsx`);
+    }
+  </script>
+</body>
+</html>

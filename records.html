@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Records</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f8f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #20232a;
+      padding: 1rem;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .nav-links a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 12px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    textarea {
+      height: 180px;
+      resize: vertical;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .status {
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+   <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+  <header>
+    <div class="logo">JosRenith Admin</div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="view-records.html">Records</a>
+         <a href="admin-signin.html">Back to Admin</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <h2>Create New Record</h2>
+    <input type="text" id="title" placeholder="Enter Title" />
+    <input type="text" id="author" placeholder="Enter Author Name" />
+    <textarea id="content" placeholder="Write your note here..."></textarea>
+    <button onclick="saveRecord()">Save Record</button>
+    <div class="status" id="statusMessage"></div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+      storageBucket: "josrenithdata.appspot.com",
+      messagingSenderId: "927727164934",
+      appId: "1:927727164934:web:571201ca8783b143c76d87",
+      measurementId: "G-TV2887MC0T"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.saveRecord = async () => {
+      const title = document.getElementById("title").value.trim();
+      const author = document.getElementById("author").value.trim();
+      const content = document.getElementById("content").value.trim();
+      const status = document.getElementById("statusMessage");
+
+      if (!title || !author || !content) {
+        status.style.color = "red";
+        status.innerText = "Please fill in all fields.";
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "records"), {
+          title,
+          author,
+          content,
+          createdAt: serverTimestamp()
+        });
+
+        status.style.color = "green";
+        status.innerText = "✅ Note saved successfully!";
+        
+        document.getElementById("title").value = "";
+        document.getElementById("author").value = "";
+        document.getElementById("content").value = "";
+
+      } catch (error) {
+        console.error("Error saving record:", error);
+        status.style.color = "red";
+        status.innerText = "❌ Error saving record.";
+      }
+    };
+  </script>
+</body>
+</html>

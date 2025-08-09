@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Remove Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f2f2f2;
+      padding: 10px 15px;
+      margin: 10px auto;
+      max-width: 500px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .admin-card span {
+      font-weight: bold;
+    }
+    .delete-btn {
+      color: red;
+      cursor: pointer;
+      font-size: 18px;
+      margin-left: 10px;
+    }
+  </style>
+   <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">JosRenith</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="admin-signin.html">Admin</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="form-container">
+    <h2>All Admins</h2>
+    <div id="adminList"></div>
+  </main>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+      storageBucket: "josrenithdata.firebasestorage.app",
+      messagingSenderId: "927727164934",
+      appId: "1:927727164934:web:571201ca8783b143c76d87",
+      measurementId: "G-TV2887MC0T"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const adminList = document.getElementById("adminList");
+
+    async function fetchAdmins() {
+      adminList.innerHTML = "<p>Loading admins...</p>";
+      const snapshot = await getDocs(collection(db, "admins"));
+      adminList.innerHTML = "";
+
+      if (snapshot.empty) {
+        adminList.innerHTML = "<p>No admins found.</p>";
+        return;
+      }
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const card = document.createElement("div");
+        card.className = "admin-card";
+        card.innerHTML = `
+          <span>${data.email}</span>
+          <span class="delete-btn" data-id="${docSnap.id}">🗑️</span>
+        `;
+        adminList.appendChild(card);
+      });
+
+      // Add delete listeners
+      document.querySelectorAll(".delete-btn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const id = btn.getAttribute("data-id");
+          const confirmed = confirm("Are you sure you want to remove this admin?");
+          if (confirmed) {
+            await deleteDoc(doc(db, "admins", id));
+            alert("Admin removed.");
+            fetchAdmins(); // Refresh list
+          }
+        });
+      });
+    }
+
+    fetchAdmins();
+  </script>
+</body>
+</html>

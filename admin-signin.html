@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Sign In</title>
+  <link rel="stylesheet" href="style.css" />
+   <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">JosRenith</div>
+      <ul class="nav-links">
+      </ul>
+    </nav>
+  </header>
+
+  <main class="form-container">
+    <h2>Admin Sign In</h2>
+    <form id="signinForm">
+      <input type="email" id="email" placeholder="Admin Email" required /><br />
+      <input type="password" id="password" placeholder="Password" required /><br />
+      <button type="submit">Sign In</button>
+    </form>
+  </main>
+
+  <!-- Firebase SDKs & Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+      storageBucket: "josrenithdata.firebasestorage.app",
+      messagingSenderId: "927727164934",
+      appId: "1:927727164934:web:571201ca8783b143c76d87",
+      measurementId: "G-TV2887MC0T"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    document.getElementById("signinForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // 🔐 Check Firestore for admin role
+        const docRef = doc(db, "admins", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists() && docSnap.data().role === "admin") {
+          alert("Welcome, Admin!");
+          window.location.href = "admin.html"; // Protected dashboard
+        } else {
+          alert("Access denied: You are not an admin.");
+        }
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

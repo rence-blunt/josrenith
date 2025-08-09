@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - JosRenith</title>
+  <link rel="stylesheet" href="style.css" />
+   <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --sidebar-bg: #20232a;
+      --sidebar-text: #ffffff;
+      --highlight-color: #61dafb;
+    }
+
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #ffffff;
+      --sidebar-bg: #1f1f1f;
+      --sidebar-text: #ffffff;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    header {
+      background-color: #333;
+      color: white;
+      padding: 15px 20px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .sidebar, .sidebar-right {
+      position: fixed;
+      top: 70px;
+      width: 220px;
+      height: calc(100% - 70px);
+      background-color: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      padding: 20px 15px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      z-index: 100;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar { left: 0; }
+    .sidebar-right { right: 0; }
+
+    .sidebar h3, .sidebar-right h3 {
+      color: var(--highlight-color);
+      font-size: 18px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .sidebar a, .sidebar-right a {
+      text-decoration: none;
+      color: var(--sidebar-text);
+      display: block;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+    }
+
+    .sidebar a:hover, .sidebar a.active, .sidebar-right a:hover {
+      background-color: var(--highlight-color);
+      color: #20232a;
+    }
+
+    .logout-btn {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+      transition: background 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: #e60000;
+    }
+
+    .main-content {
+      margin-left: 240px;
+      margin-right: 240px;
+      margin-top: 80px;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar, .sidebar-right {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.active, .sidebar-right.active {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin: 80px 10px 10px 10px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+    a.invisible-link {
+  color: white;
+  text-decoration: none;
+  cursor: default;
+  pointer-events: auto; /* still clickable */
+  opacity: 0; /* fully hidden */
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+  <div style="flex-grow: 1; text-align: center;">
+    <div class="logo">JosRenith Admin</div>
+  </div>
+<ul class="nav-links" style="position: absolute; right: 80px;">
+
+    <li><a href="index.html">Home</a></li>
+  </ul>
+</header>
+
+  <!-- Left Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <h3>Admin Panel 1</h3>
+    <ul>
+      <li><a href="all-entries.html">ALL MEMBERS</a></li>
+      <li><a href="delete-all.html">DELETE MEMBERS DATA</a></li>
+      <li><a href="view.html">DENOMINATIONS</a></li>
+      <li><a href="delete.html">DELETE DENOMINATIONAL DATA</a></li>
+      <li><a href="remove-admin.html">REMOVE ADMIN</a></li>
+      <li><a href="admin-signup.html">ADMIN SIGN-UP</a></li>
+    </ul>
+    <button id="logoutBtn" class="logout-btn">Log Out</button>
+  </aside>
+
+  <!-- Right Sidebar -->
+  <aside class="sidebar-right" id="sidebarRight">
+    <h3>Admin Panel 2</h3>
+    <ul>
+         <li><a href="manage-emails.html">MANAGE EMAILS</a></li>
+            <li><a href="manage-codes.html">MANAGE CODES</a></li>
+      <li><a href="records.html">ADD RECORDS</a></li>
+      <li><a href="view-records.html">VIEW RECORDS</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h2 id="welcomeMessage">Welcome, Chaplain</h2>
+    <div class="card">
+      <p>Use the sidebar to manage all group entries, view and delete records, or create new entries.</p>
+      <p>This dashboard gives you access to all the tools for managing your data in JosRenith.</p>
+    <a href="removerecords.html" class="invisible-link">del</a>
+
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut,
+      setPersistence,
+      browserLocalPersistence
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+      storageBucket: "josrenithdata.firebasestorage.app",
+      messagingSenderId: "927727164934",
+      appId: "1:927727164934:web:571201ca8783b143c76d87",
+      measurementId: "G-TV2887MC0T"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    setPersistence(auth, browserLocalPersistence)
+      .then(() => {
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            document.getElementById("welcomeMessage").textContent = `Welcome, ${user.email}`;
+          } else {
+            window.location.href = "sign-in.html";
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Persistence error:", error);
+      });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth)
+        .then(() => {
+          window.location.href = "admin-signin.html";
+        })
+        .catch((error) => {
+          console.error("Logout error:", error);
+        });
+    });
+</script>
+</body>
+</html>

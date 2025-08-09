@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Remove Records - JosRenith</title>
+  <meta charset="UTF-8">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('my-bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 12px 24px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 16px;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    .search-container {
+      margin-left: 20px;
+    }
+
+    .search-container input {
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    h2 {
+      margin: 100px 20px 20px;
+      color: white;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    #records {
+      padding: 20px;
+    }
+
+    .note {
+      background: white;
+      padding: 16px;
+      margin-bottom: 16px;
+      border-left: 5px solid #f44336;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .note h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .note .meta {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 8px;
+    }
+
+    .note p {
+      margin: 0 0 12px;
+      white-space: pre-line;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .buttons button {
+      padding: 6px 14px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .read-btn {
+      background: #2196F3;
+      color: white;
+    }
+
+    .delete-btn {
+      background: #f44336;
+      color: white;
+    }
+  </style>
+   <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+  <header>
+    <div class="logo">JosRenith</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="admin-signin.html">Back to Admin</a></li>
+    </ul>
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search title, author, date...">
+    </div>
+  </header>
+
+  <h2>🗑️ Remove Records</h2>
+  <div id="records"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const recordsContainer = document.getElementById("records");
+
+    function renderRecord(doc) {
+      const data = doc.data();
+      const div = document.createElement("div");
+      div.className = "note";
+
+      const firstLine = data.content.split('\n')[0] || data.content;
+      const dateStr = new Date(data.createdAt.seconds * 1000).toLocaleString();
+
+      div.innerHTML = `
+        <h3>${data.title}</h3>
+        <div class="meta">By ${data.author} (${dateStr})</div>
+        <p>${firstLine}...</p>
+        <div class="buttons">
+          <button class="read-btn">Read</button>
+          <button class="delete-btn">Delete</button>
+        </div>
+      `;
+
+      div.querySelector(".read-btn").onclick = () => {
+        alert(`Title: ${data.title}\n\n${data.content}\n\nBy ${data.author} (${dateStr})`);
+      };
+
+      div.querySelector(".delete-btn").onclick = () => {
+        if (confirm(`Delete this record titled "${data.title}" by ${data.author}?`)) {
+          db.collection("records").doc(doc.id).delete()
+            .then(() => {
+              div.remove();
+              alert("Record deleted.");
+            })
+            .catch(err => {
+              alert("Error deleting record: " + err.message);
+            });
+        }
+      };
+
+      recordsContainer.appendChild(div);
+    }
+
+    function fetchAndRenderRecords() {
+      recordsContainer.innerHTML = "";
+      db.collection("records").orderBy("createdAt", "desc").get()
+        .then(snapshot => {
+          snapshot.forEach(doc => renderRecord(doc));
+        });
+    }
+
+    document.getElementById("searchInput").addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      const notes = document.querySelectorAll(".note");
+      notes.forEach(note => {
+        const text = note.innerText.toLowerCase();
+        note.style.display = text.includes(query) ? "block" : "none";
+      });
+    });
+
+    fetchAndRenderRecords();
+  </script>
+</body>
+</html>

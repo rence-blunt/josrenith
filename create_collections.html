@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Firestore Collections</title>
+  <script type="module">
+    // ✅ Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // ✅ Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+      storageBucket: "josrenithdata.firebasestorage.app",
+      messagingSenderId: "927727164934",
+      appId: "1:927727164934:web:571201ca8783b143c76d87",
+      measurementId: "G-TV2887MC0T"
+    };
+
+    // ✅ Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // ✅ List of Denominations (Collections)
+    const denominations = [
+      "NUPS-G", "GHAMSU", "PENSA", "APOSA", "CASA",
+      "FIRST LOVE", "AGCM", "PAS-ROMANA", "NCF", "SPIRIT-LIFE",
+      "EVERGREEN", "KMI", "GNASS"
+    ];
+
+    // ✅ Dummy Document to initialize each collection
+    const dummyData = {
+      fullName: "Sample Name",
+      mobileNumber: "0000000000",
+      email: "sample@email.com",
+      fellowshipHome: "Yes",
+      studentType: "Day",
+      hostel: "None",
+      dob: "2000-01-01",
+      year: "D26",
+      hometown: "Sampletown",
+      comment: "Just a sample document",
+      submittedAt: new Date().toISOString()
+    };
+
+    // ✅ Create collections by writing 1 dummy doc to each
+    async function createCollections() {
+      for (let group of denominations) {
+        try {
+          const docRef = doc(db, group, "initialDoc");
+          await setDoc(docRef, dummyData);
+          console.log(`✅ Created collection: ${group}`);
+        } catch (error) {
+          console.error(`❌ Failed for ${group}:`, error);
+        }
+      }
+    }
+
+    // ✅ Run when page loads
+    window.onload = createCollections;
+  </script>
+</head>
+<body>
+  <h2>Creating Firestore Collections...</h2>
+  <p>Open browser console (F12) to see results.</p>
+</body>
+</html>

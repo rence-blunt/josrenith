@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage Access Codes</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('my-bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .codes-container {
+      background-color: white;
+      padding: 2rem;
+      margin: 2rem auto;
+      border-radius: 12px;
+      max-width: 1000px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      color: #222;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      padding: 6px;
+      width: 120px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 6px 12px;
+      background-color: #2d89e5;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1a65b8;
+    }
+
+    .status {
+      font-size: 14px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .navbar {
+      background-color: #2d89e5;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-links li a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+ <link rel="icon" type="image/png" href="favicon.png">
+<body>
+  <!-- ✅ Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">JosRenith</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="admin-signin.html">Admin</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="codes-container">
+    <h2>Manage Denomination Access Codes</h2>
+    <div id="status" class="status"></div>
+    <table id="codesTable">
+      <thead>
+        <tr>
+          <th>Denomination</th>
+          <th>Current Code</th>
+          <th>Update Code</th>
+          <th>Save</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Filled dynamically -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ✅ Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getFirestore, doc, getDocs, updateDoc, collection } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+      authDomain: "josrenithdata.firebaseapp.com",
+      projectId: "josrenithdata",
+      storageBucket: "josrenithdata.firebasestorage.app",
+      messagingSenderId: "927727164934",
+      appId: "1:927727164934:web:571201ca8783b143c76d87",
+      measurementId: "G-TV2887MC0T"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const tableBody = document.querySelector("#codesTable tbody");
+    const status = document.getElementById("status");
+
+    async function loadCodes() {
+      tableBody.innerHTML = "";
+      const querySnapshot = await getDocs(collection(db, "denominationCodes"));
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${docSnap.id}</td>
+          <td>${data.code || 'N/A'}</td>
+          <td><input type="text" value="${data.code || ''}" id="input-${docSnap.id}" /></td>
+          <td><button onclick="saveCode('${docSnap.id}')">Save</button></td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    }
+
+    window.saveCode = async function (denomination) {
+      const newCode = document.getElementById(`input-${denomination}`).value.trim();
+      if (!newCode) {
+        status.textContent = `❌ Code cannot be empty for ${denomination}`;
+        status.style.color = "red";
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, "denominationCodes", denomination), {
+          code: newCode,
+          updatedAt: new Date()
+        });
+        status.textContent = `✅ Code updated for ${denomination}`;
+        status.style.color = "green";
+        await loadCodes(); // refresh table
+      } catch (err) {
+        console.error(err);
+        status.textContent = `❌ Failed to update ${denomination}`;
+        status.style.color = "red";
+      }
+    }
+
+    loadCodes();
+  </script>
+</body>
+</html>
