@@ -122,8 +122,21 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // script.js
-import { db } from './firebase-config.js';
-import { collection, addDoc } from 'firebase/firestore';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDC6sfUR6XBVsbihLY9BdIVJGfVMsH8tJM",
+  authDomain: "josrenithdata.firebaseapp.com",
+  projectId: "josrenithdata",
+  storageBucket: "josrenithdata.appspot.com",
+  messagingSenderId: "927727164934",
+  appId: "1:927727164934:web:571201ca8783b143c76d87",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 
 document.getElementById("groupForm").addEventListener("submit", async (e) => {
   e.preventDefault();

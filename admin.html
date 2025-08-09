@@ -83,6 +83,18 @@
       z-index: 100;
       transition: transform 0.3s ease;
     }
+ul a {
+  background-color: darkred; /* blue background */
+  padding: 8px 12px;         /* some spacing */
+  text-decoration: none;     /* remove underline */
+  display: inline-block;     /* allow padding to apply */
+  border-radius: 4px;        /* optional rounded corners */
+  transition: background-color 0.3s ease;
+}
+
+ul a:hover {
+  background-color: #2d00f3; /* darker blue on hover */
+}
 
     .sidebar { left: 0; }
     .sidebar-right { right: 0; }
@@ -184,12 +196,12 @@
   <aside class="sidebar" id="sidebar">
     <h3>Admin Panel 1</h3>
     <ul>
-      <li><a href="all-entries.html">ALL MEMBERS</a></li>
-      <li><a href="delete-all.html">DELETE MEMBERS DATA</a></li>
-      <li><a href="view.html">DENOMINATIONS</a></li>
-      <li><a href="delete.html">DELETE DENOMINATIONAL DATA</a></li>
-      <li><a href="remove-admin.html">REMOVE ADMIN</a></li>
-      <li><a href="admin-signup.html">ADMIN SIGN-UP</a></li>
+      <a href="all-entries.html">ALL DENOMINATIONAL ENTRIES</a></li>
+      <a href="delete-all.html">DELETE FROM ALL D. E.</a></li>
+      <a href="view.html">DENOMINATIONAL ENTRIES</a></li>
+      <a href="delete.html">DELETE FROM D. E.</a></li>
+      <a href="remove-admin.html">REMOVE ADMIN</a></li>
+      <a href="admin-signup.html">ADMIN SIGN-UP</a></li>
     </ul>
     <button id="logoutBtn" class="logout-btn">Log Out</button>
   </aside>
@@ -198,20 +210,24 @@
   <aside class="sidebar-right" id="sidebarRight">
     <h3>Admin Panel 2</h3>
     <ul>
-         <li><a href="manage-emails.html">MANAGE EMAILS</a></li>
-            <li><a href="manage-codes.html">MANAGE CODES</a></li>
-      <li><a href="records.html">ADD RECORDS</a></li>
-      <li><a href="view-records.html">VIEW RECORDS</a></li>
+         <a href="manage-emails.html">MANAGE EMAILS</a></li>
+            <a href="manage-codes.html">MANAGE CODES</a></li>
+      <a href="records.html">ADD RECORDS</a></li>
+      <a href="view-records.html">VIEW RECORDS</a></li>
     </ul>
   </aside>
 
   <!-- Main Content -->
   <div class="main-content">
-    <h2 id="welcomeMessage">Welcome, Chaplain</h2>
+    <h2 id="welcomeMessage">Welcome, </h2>
     <div class="card">
-      <p>Use the sidebar to manage all group entries, view and delete records, or create new entries.</p>
-      <p>This dashboard gives you access to all the tools for managing your data in JosRenith.</p>
-    <a href="removerecords.html" class="invisible-link">del</a>
+      <p>Use the sidebar to manage all denominational entries, view and delete records, or create new entries. 
+        This dashboard gives you access to all the tools for managing denominational data in JosRenith.</p>
+   <p><strong>Note:</strong> Don't share any data or allow anyone aside chaplains chosen by NTCP Chaplaincy board to handle the entries. And ensure to <strong>RECORD</strong> any entries shared or changes made to this platform to aid in tracking of all activities.</p>
+  <P>Lastly, don't forget to Log Out after performing tasks on the platform. </P> 
+   <p>In case of any issue, kindly call
+       <a href="tel:+233245691423">(+233) 0245691423</a><br> or email <a href="mailto:velkovixhub23@gmail.com">velkovixhub23@gmail.com</a><br></p>
+   <a href="removerecords.html" class="invisible-link">del</a>
 
     </div>
   </div>

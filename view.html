@@ -22,6 +22,46 @@
       z-index: 1000;
     }
 
+
+/* ===== Navbar ===== */
+ .navbar {
+  background: #003366;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  align-items: center;
+  
+  position: fixed; /* stays at top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* stays above other elements */
+}
+
+/* Prevent body content from being hidden under nav */
+body {
+  padding-top: 70px; /* match your nav height */
+}
+   
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  padding-right: 9%;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+}
+
     .navbar {
       display: flex;
       justify-content: space-between;
@@ -95,7 +135,7 @@
   </header>
 
   <main>
-    <h1>Each Denominational entries</h1>
+    <h1>Denominational Entries</h1>
     <div class="group-container" id="group-data-container"></div>
   </main>
 
