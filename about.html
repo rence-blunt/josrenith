@@ -5,26 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About - JosRenith</title>
   <link rel="stylesheet" href="style.css"/>
-  <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="favicon.png">
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-
     .about-container {
       max-width: 960px;
       margin: 0 auto;
       padding: 2rem;
-      padding-bottom: 5rem; /* space for footer */
+      font-family: Arial, sans-serif;
+      padding-bottom: 5rem; /* extra space for fixed footer */
     }
-
     .section-title {
       text-align: center;
       font-size: 2rem;
       margin-bottom: 1.5rem;
     }
-
     .intro-text {
       font-size: 1.05rem;
       line-height: 1.6;
@@ -35,7 +29,6 @@
       margin-left: auto;
       margin-right: auto;
     }
-
     .team-title {
       text-align: center;
       font-size: 1.75rem;
@@ -43,20 +36,6 @@
       font-weight: 600;
       color: #222;
     }
-
-    .big-person-card {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .big-person-card img {
-      width: 200px;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 50%;
-      margin-bottom: 1rem;
-    }
-
     .person-card {
       display: flex;
       flex-direction: column;
@@ -68,7 +47,6 @@
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-
     .person-card img {
       width: 150px;
       height: 150px;
@@ -76,51 +54,20 @@
       border-radius: 50%;
       margin-bottom: 1rem;
     }
-
     .person-card h3 {
       margin: 0.5rem 0;
     }
-
     .person-card p {
       font-size: 0.95rem;
       color: #333;
     }
-
-    .people-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+    @media (min-width: 600px) {
+      .people-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 2rem;
+      }
     }
-
-    .heart-grid-three {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-    }
-
-    .heart-card {
-      text-align: center;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .heart-card img {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 50%;
-      margin-bottom: 0.75rem;
-    }
-
-    .creator {
-      font-size: clamp(.6rem,2vw,1rem);
-      color: #968c8c;
-      font-style: italic;
-      margin: .5rem 0 1.5rem;
-    }
-
     footer {
       bottom: 0;
       width: 100%;
@@ -131,43 +78,21 @@
       font-size: 0.9rem;
       z-index: 999;
     }
-
+       .creator {
+      font-size: clamp(.6rem,2vw,1rem);
+      color: #968c8c;
+      font-style: italic;
+      margin: .5rem 0 1.5rem;
+    }
     .admin-hidden-link,
-    .admin-hidden-link:visited,
-    .admin-hidden-link:hover,
-    .admin-hidden-link:focus,
-    .admin-hidden-link:active {
-      color: #222;
-      text-decoration: none;
-    }
+.admin-hidden-link:visited,
+.admin-hidden-link:hover,
+.admin-hidden-link:focus,
+.admin-hidden-link:active {
+    color: #222;
+    text-decoration: none; /* optional, removes underline */
+}
 
-    /* Responsive for small screens */
-    @media (max-width: 600px) {
-      .about-container {
-        width: 100%;     /* take full width of screen */
-        max-width: none; /* remove max constraint */
-        padding: 1rem;
-      }
-
-      footer {
-        width: 100%;     /* align footer with nav */
-        max-width: none;
-        margin: 0;
-      }
-
-      .people-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .heart-grid-three {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      /* Ensure Main Chaplain left, Vice right */
-      .person-card.main {
-        order: -1;
-      }
-    }
   </style>
 </head>
 <body>
@@ -176,6 +101,7 @@
       <div class="logo">JosRenith</div>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
+       
       </ul>
     </nav>
   </header>
@@ -183,107 +109,120 @@
   <main class="about-container">
     <h1 class="section-title">About JosRenith</h1>
 
-    <div class="intro-text">
-      <p><strong>JosRenith</strong> is a dedicated platform created to help Nurses' Training College, Pantang — Chaplaincy Board and all denominations on campus to efficiently collect and manage members information. It was developed to simplify data entry, support easy access to records, and ensure a structured communication flow within denominations. The website was designed with ease-of-use and high level of security.</p>
+   <div class="intro-text">
+  <p><strong>JosRenith</strong> is a dedicated platform created to help Nurses' Training College, Pantang — Chaplaincy Board and all denominations on campus to efficiently collect and manage members information. It was developed to simplify data entry, support easy access to records, and ensure a structured communication flow within denominations. The website was designed with ease-of-use and high level of security.</p>
 
-      <p>Infact, Joseph came up with the idea of gathering data from his church members to enhance communication and organization. His dedication and foresight sparked the development of this platform. Sincerely, he thought of this project about weeks to a month before he was chosen as both the president for his denomination and the Chaplaincy board.</p>
+   <p>Infact, Joseph came up with the idea of gathering data from his church members to enhance communication and organization. His dedication and foresight sparked the development of this platform. Sincerely, he thought of this project about weeks to a month before he was chosen as both the president for his denomination and the Chaplaincy board.</p>
 
-      <p><em>This project is lovingly dedicated to all denominations on the Nurses' Training College, Pantang campus — and to D25, D26, and D27.</em></p>
-    </div>
+  <p><em>This project is lovingly dedicated to all denominations on the Nurses' Training College, Pantang campus — and to D25, D26, and D27.</em></p>
+</div>
 
-    <h2 class="team-title">The developer</h2>
-    <div class="big-person-card">
-      <img src="heart7.jpg" alt="Big Contributor" />
-      <h3>Maxmillion Okyere Agyei</h3>
-      <div class="creator">Rence Blunt</div>
-      <p>Main designer and developer of the JosRenith platform. He crafted both frontend and backend assisted by Maryditte in the templates planning and designing.</p>
-    </div>
+   <h2 class="team-title">The developer</h2>
+    <!-- Big full-width contributor below -->
+<div class="big-person-card">
+  <img src="heart7.jpg" alt="Big Contributor" />
+  <h3>Maxmillion Okyere Agyei</h3>
+    <h3>         <div class="creator">Rence Blunt</div>
+  <p>  </h3>
+   <p>Main designer and developer of the JosRenith platform. He crafted both frontend and backend assisted by Maryditte in the templates planning and designing.</p>
+  </div>
+ <h2 class="team-title">Chaplaincy Heads For 2025/2026 Spiritual</h2>
+<div class="people-grid">
+  
+  <!-- First row: 2 people -->
+  <div class="person-card">
+    <img src="joseph.jpg" alt="Joseph Donkor" />
+    <h3>Joseph Donkor</h3>
+             <div class="creator">Main Chaplain</div>
+  <p>  
+  </div>
 
-    <h2 class="team-title">Chaplaincy Heads For 2025/2026 Spiritual</h2>
-    <div class="people-grid">
-      <div class="person-card main">
-        <img src="joseph.jpg" alt="Joseph Donkor" />
-        <h3>Joseph Donkor</h3>
-        <div class="creator">Main Chaplain</div>
-      </div>
+  <div class="person-card">
+    <img src="vice chaplain.jpg" alt="Maxmillion Okyere Agyei" />
+    <h3>Doris Konlan</h3>
+             <div class="creator">Vice Chaplain</div>
+  <p>  
+  </div>
+</div>
 
-      <div class="person-card vice">
-        <img src="vice chaplain.jpg" alt="Doris Konlan" />
-        <h3>Doris Konlan</h3>
-        <div class="creator">Vice Chaplain</div>
-      </div>
-    </div>
 
-    <h2 class="team-title">My Heart Warms to These</h2>
-    <p class="team-subtitle">
-      For their silent ways words can't explain. And also to the SRC President and his vice for the 2025/2026 academic year, together with their executives, we love you all.
-    </p>
+<h2 class="team-title">My Heart Warms to These</h2>
+<p class="team-subtitle">
+  For their silent ways words can't explain. And also to the SRC President and his vice for the 2025/2026 academic year, together with their executives, we love you all.
+</p>
 
-    <div class="heart-grid-three">
-      <div class="heart-card">
-        <img src="eben.jpg" alt="Ebenezer Offei Nyarko" />
-        <h3>Ebenezer Offei Nyarko</h3>
-        <div class="creator">SRC President</div>
-      </div>
-      <div class="heart-card">
-        <img src="benedicta.jpg" alt="Benedicta A. Anansewaa" />
-        <h3>Benedicta A. Anansewaa</h3>
-        <div class="creator">Vice SRC President</div>
-      </div>
-      <div class="heart-card">
-        <img src="maryditte.jpg" alt="Maryditte Naa Adukwey" />
-        <h3>Maryditte Naa Adukwey</h3>
-        <div class="creator">An aspiring developer</div>
-      </div>
-      <div class="heart-card">
-        <img src="eric.jpg" alt="Eric Yeboah" />
-        <h3>Eric Yeboah</h3>
-        <div class="creator">An aspiring developer who introduced me to vibe coding</div>
-      </div>
-      <div class="heart-card">
-        <img src="dora.jpg" alt="Dora Asor" />
-        <h3>Dora Asor</h3>
-      </div>
-      <div class="heart-card">
-        <img src="yvonne.jpg" alt="Yvonne Afriyie" />
-        <h3>Yvonne Afriyie</h3>
-      </div>
-      <div class="heart-card">
-        <img src="rita.jpg" alt="Rita Dwirentwi" />
-        <h3>Rita Dwirentwi</h3>
-      </div>
-      <div class="heart-card">
-        <img src="florence.jpg" alt="Oppong Florence" />
-        <h3>Oppong Florence</h3>
-      </div>
-      <div class="heart-card">
-        <img src="heart8.jpg" alt="Richard Ayibor" />
-        <h3>Richard Ayibor</h3>
-      </div>
-      <div class="heart-card">
-        <img src="dede.jpg" alt="Ademan Kouffie Joyce" />
-        <h3>Ademan Kouffie Joyce</h3>
-      </div>
-      <div class="heart-card">
-        <img src="portia.jpg" alt="Portia Owusua" />
-        <h3>Portia Owusua</h3>
-      </div>
-      <div class="heart-card">
-        <img src="josh.jpg" alt="Joshua Tettey" />
-        <h3>Joshua Tettey</h3>
-      </div>
-    </div>
+
+<div class="heart-grid-three">
+  <div class="heart-card">
+    <img src="eben.jpg" alt="Name 1" />
+    <h3>Ebenezer Offei Nyarko</h3>
+           <div class="creator">SRC President</div>
+  <p>   
+  </div>
+  <div class="heart-card">
+    <img src="benedicta.jpg" alt="Name 2" />
+    <h3>Benedicta A. Anansewaa</h3>
+           <div class="creator">Vice SRC President</div>
+  <p>   
+  </div>
+  <div class="heart-card">
+    <img src="maryditte.jpg" alt="Name 3" />
+    <h3>Maryditte Naa Adukwey</h3>
+           <div class="creator">An aspiring developer</div>
+  <p>    
+  </div>
+    <div class="heart-card">
+    <img src="eric.jpg" alt="Name 1" />
+    <h3>Eric Yeboah</h3>
+      <div class="creator">An aspiring developer who introduced me to vibe coding</div>
+  <p>
+  </div>
+    <div class="heart-card">
+    <img src="dora.jpg" alt="Name 5" />
+    <h3>Dora Asor</h3>
+  </div>
+  <div class="heart-card">
+    <img src="yvonne.jpg" alt="Name 4" />
+    <h3> Yvonne Afriyie</h3>
+  </div>
+  <div class="heart-card">
+    <img src="rita.jpg" alt="Name 6" />
+    <h3>Rita Dwirentwi</h3>
+  </div>
+  <div class="heart-card">
+    <img src="florence.jpg" alt="Name 7" />
+    <h3>Oppong Florence</h3>
+  </div>
+  <div class="heart-card">
+    <img src="heart8.jpg" alt="Name 7" />
+    <h3>Richard Ayibor</h3>
+  </div>
+   <div class="heart-card">
+    <img src="dede.jpg" alt="Name 7" />
+    <h3>Ademan Kouffie Joyce</h3>
+  </div>
+   <div class="heart-card">
+    <img src="portia.jpg" alt="Name 1" />
+    <h3>Portia Owusua</h3>
+  </div>
+  <div class="heart-card">
+    <img src="josh.jpg" alt="Name 1" />
+    <h3>Joshua Tettey</h3>
+  </div>
+</div>
+</div>
   </main>
 
-  <footer>
-    <div class="contact-info">
-      <strong>Rence Blunt</strong><br>
-      <a href="tel:+233245691423">(+233) 0245691423</a><br>
-      <a href="mailto:velkovixhub23@gmail.com">velkovixhub23@gmail.com</a><br>
-      Kumasi, Ghana
-    </div>
-    <a href="admin-signin.html" class="admin-hidden-link">an</a>
-  </footer>
+<footer>
+  <div class="contact-info">
+    <strong>Rence Blunt</strong><br>
+    <a href="tel:+233245691423">(+233) 0245691423</a><br>
+    <a href="mailto:velkovixhub23@gmail.com">velkovixhub23@gmail.com</a><br>
+    Kumasi, Ghana
+  </div>
+
+  <a href="admin-signin.html" class="admin-hidden-link">an</a>
+</footer>
+
 </body>
 </html>
-
