@@ -144,12 +144,14 @@
     /* Responsive for small screens */
     @media (max-width: 600px) {
       .about-container {
-        max-width: 100%;
+        width: 100%;     /* take full width of screen */
+        max-width: none; /* remove max constraint */
         padding: 1rem;
       }
 
       footer {
-        max-width: 100%;
+        width: 100%;     /* align footer with nav */
+        max-width: none;
         margin: 0;
       }
 
@@ -284,3 +286,4 @@
   </footer>
 </body>
 </html>
+
