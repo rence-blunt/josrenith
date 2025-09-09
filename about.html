@@ -68,6 +68,15 @@
         gap: 2rem;
       }
     }
+
+
+/* Force 2 per row on small screens */
+@media (max-width: 600px) {
+  .heart-grid-three {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  }
+    
     footer {
       bottom: 0;
       width: 100%;
