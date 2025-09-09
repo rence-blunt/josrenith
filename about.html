@@ -61,13 +61,92 @@
       font-size: 0.95rem;
       color: #333;
     }
-    @media (min-width: 600px) {
-      .people-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 2rem;
-      }
+ /* Force 2 per row on small screens */
+@media (max-width: 600px) {
+  .heart-grid-three {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  footer {
+      bottom: 0;
+      width: 100%;
+      background-color: #222;
+      color: #fff;
+      text-align: center;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      z-index: 999;
     }
+       .creator {
+      font-size: clamp(.6rem,2vw,1rem);
+      color: #968c8c;
+      font-style: italic;
+      margin: .5rem 0 1.5rem;
+    }
+    .admin-hidden-link,
+.admin-hidden-link:visited,
+.admin-hidden-link:hover,
+.admin-hidden-link:focus,
+.admin-hidden-link:active {
+    color: #222;
+    text-decoration: none; /* optional, removes underline */
+}
+
+.about-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem;
+      font-family: Arial, sans-serif;
+      padding-bottom: 5rem; /* extra space for fixed footer */
+    }
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .intro-text {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      color: #333;
+      text-align: center;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .team-title {
+      text-align: center;
+      font-size: 1.75rem;
+      margin: 3rem 0 2rem 0;
+      font-weight: 600;
+      color: #222;
+    }
+    .person-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+      text-align: center;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .person-card img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+    }
+    .person-card h3 {
+      margin: 0.5rem 0;
+    }
+    .person-card p {
+      font-size: 0.95rem;
+      color: #333;
+    }
+}
     footer {
       bottom: 0;
       width: 100%;
