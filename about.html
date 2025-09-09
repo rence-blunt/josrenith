@@ -61,36 +61,6 @@
       font-size: 0.95rem;
       color: #333;
     }
-/* --- Responsive for small screens --- */
-@media (max-width: 600px) {
-  /* Navbar stacks */
-  .navbar {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .navbar .nav-links {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  /* Force 2 per row for grids */
-  .people-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .heart-grid-three {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  /* Text centered titles on mobile */
-  .section-title,
-  .team-title {
-    text-align: center;
-  }
-}
-
     @media (min-width: 600px) {
       .people-grid {
         display: grid;
@@ -98,15 +68,6 @@
         gap: 2rem;
       }
     }
-
-
-/* Force 2 per row on small screens */
-@media (max-width: 600px) {
-  .heart-grid-three {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  }
-    
     footer {
       bottom: 0;
       width: 100%;
