@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Group Form - JosRenith</title>
   <link rel="stylesheet" href="style.css"/>
-   <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
     .info-icon {
       display: inline-block;
@@ -90,29 +90,29 @@
     <h2 id="form-title">Members Registration</h2>
     <form id="groupForm">
       <label for="fullName">Full Name:</label>
-      <input type="text" id="fullName" name="fullName" required />
+      <input type="text" id="fullName" name="fullName" />
 
       <label for="mobileNumber">Mobile Number:</label>
-      <input type="tel" id="mobileNumber" name="mobileNumber" required />
+      <input type="tel" id="mobileNumber" name="mobileNumber" />
 
       <label for="email">Gmail Address:</label>
-      <input type="email" id="email" name="email" required />
+      <input type="email" id="email" name="email" />
 
       <label>Did you used to fellowship in this congregation at home?</label>
       <div>
-        <input type="radio" id="fellowshipYes" name="fellowshipHome" value="Yes" required />
+        <input type="radio" id="fellowshipYes" name="fellowshipHome" value="Yes"/>
         <label for="fellowshipYes">Yes</label>
 
-        <input type="radio" id="fellowshipNo" name="fellowshipHome" value="No" />
+        <input type="radio" id="fellowshipNo" name="fellowshipHome" value="No"/>
         <label for="fellowshipNo">No</label>
       </div>
 
       <label>Are you a Day Student or Hosteler?</label>
       <div>
-        <input type="radio" id="dayStudent" name="studentType" value="Day Student" required />
+        <input type="radio" id="dayStudent" name="studentType" value="Day Student"/>
         <label for="dayStudent">Day Student</label>
 
-        <input type="radio" id="hosteler" name="studentType" value="Hosteler" />
+        <input type="radio" id="hosteler" name="studentType" value="Hosteler"/>
         <label for="hosteler">Hosteler</label>
       </div>
 
@@ -128,10 +128,10 @@
       </div>
 
       <label for="dob">Date of Birth:</label>
-      <input type="date" id="dob" name="dob" required />
+      <input type="date" id="dob" name="dob"/>
 
       <label for="year">Year Batch (e.g., D26):</label>
-      <select id="year" name="year" required>
+      <select id="year" name="year">
         <option value="">Select Year Batch</option>
         <option value="D26">D26</option>
         <option value="D27">D27</option>
@@ -248,24 +248,23 @@
       }
 
       const formData = {
-        fullName: form.fullName.value,
-        mobileNumber: form.mobileNumber.value,
-        email: form.email.value,
-        fellowshipHome: form.fellowshipHome.value,
-        studentType: form.studentType.value,
+        fullName: form.fullName.value || "",
+        mobileNumber: form.mobileNumber.value || "",
+        email: form.email.value || "",
+        fellowshipHome: form.fellowshipHome.value || "",
+        studentType: form.studentType.value || "",
         hostel: form.hostel?.value || "",
-        dob: form.dob.value,
+        dob: form.dob.value || "",
         year: yearSelect.value === "Other" ? customYearInput.value : yearSelect.value,
-        hometown: form.hometown.value,
-        comment: form.comment.value,
+        hometown: form.hometown.value || "",
+        comment: form.comment.value || "",
         submittedAt: new Date().toISOString()
       };
 
       try {
         const q = query(
           collection(db, group),
-          where("fullName", "==", formData.fullName),
-          where("email", "==", formData.email)
+          where("fullName", "==", formData.fullName)
         );
         const querySnapshot = await getDocs(q);
 
